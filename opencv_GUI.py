@@ -14,12 +14,12 @@ class img(tkinter.Frame):
         super().__init__(master, height=800, width=1200)
         self.pack()
         self.create_widgets()
-        self.img_tk = None
-        self.cv_file= None
-        self.savefile = None
+        self.img_tk = None #画像表示用（Photoimage ）
+        self.cv_file= None #画像処理用（Mat）
+        self.savefile = None #画像保存用（PIL）
     
     def create_widgets(self):
-        
+        #メニューバー
         menubar = tkinter.Menu(self)
         menu1 = tkinter.Menu(menubar,tearoff=False)
         menu1.add_command(label="open", command=self.load_file)
@@ -27,18 +27,18 @@ class img(tkinter.Frame):
         menubar.add_cascade(label='File',menu=menu1)
         self.master["menu"] = menubar 
 
-        
-        img_frame = tkinter.Frame(self, width=640, height=480)
+        #各部品配置するためのフレーム
+        img_frame = tkinter.Frame(self, width=640, height=480)#画像表示用
         img_frame.propagate(False)
         img_frame.place(x=100,y=50)
-        b_menu_frame = tkinter.Frame(self, width=300, height=480)
+        b_menu_frame = tkinter.Frame(self, width=300, height=480)#ボタン配置用
         b_menu_frame.propagate(False)
         b_menu_frame.place(x=800, y=50)
-        log_frame = tkinter.Frame(self, width=640, height= 100)
+        log_frame = tkinter.Frame(self, width=640, height= 100)#テキストを配置する
         log_frame.propagate(False)
         log_frame.place(x=100, y=650)
-
-        image_yscrollbar = tkinter.Scrollbar(img_frame)
+        
+        image_yscrollbar = tkinter.Scrollbar(img_frame)#画像をスクロールできるようにする
         image_yscrollbar.pack(side=tkinter.RIGHT,fill=tkinter.Y)
         image_xscrollbar = tkinter.Scrollbar(img_frame,orient=tkinter.HORIZONTAL)
         image_xscrollbar.pack(side=tkinter.BOTTOM,fill=tkinter.X)
@@ -47,7 +47,7 @@ class img(tkinter.Frame):
         self.image_canvas.pack(side=tkinter.TOP, fill=tkinter.BOTH)
         image_xscrollbar["command"] =self.image_canvas.xview
         image_yscrollbar["command"] =self.image_canvas.yview
-        
+        #画像処理ボタン
         thre_button = tkinter.Button(b_menu_frame , text='二値化（THRESHOLD_BINARY）')
         thre_button.bind('<Button-1>', imgthrashhold)
         thre_button.pack(fill = 'x', padx=10)
@@ -60,14 +60,14 @@ class img(tkinter.Frame):
         orign_button.bind('<Button-1>', orginalimg)
         orign_button.pack(fill = 'x', padx=10)
 
-    def load_file(self):
-
-        ftype = [("", "*")]
-        idir = "D:\PythonScripts"
+    def load_file(self):#ファイルを読み込む関数
+　　　
+        ftype = [("", "*")]#選択できるファイルデータ
+        idir = "D:\PythonScripts" #初期選択画面
     
-        file_path = tkinter.filedialog.askopenfilename(filetypes=ftype, initialdir=idir)
+        file_path = tkinter.filedialog.askopenfilename(filetypes=ftype, initialdir=idir)#stringで受け取る
         
-        img = cv2.imread(file_path)
+        img = cv2.imread(file_path)#パスを読み込む
         
         img = cv2.resize(img, dsize=(640,480))
         self.cv_file = img.copy()
